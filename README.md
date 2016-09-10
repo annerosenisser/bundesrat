@@ -9,6 +9,6 @@ More specifically, it collects information on the unique identifier of the sessi
 I first thought of using [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) for this project, but after doing some research and reading [this](http://stackoverflow.com/questions/17436014/selenium-versus-beautifulsoup-for-web-scraping) StackoverFlow post, I realized that [Selenium](http://selenium-python.readthedocs.io/getting-started.html) would be a more adequate solution for the dynamic content of the website. 
     
 ***
-I've done this little project as a favor for a colleague and a small exercise for my webscraping skills. 
+I've done this project as a favor for a colleague and an opportunity to practice my webscraping skills (and unexpectedly, it allowed me to learn Selenium!). 
 
 The data should be of interest to scholars of political science and public administration.
