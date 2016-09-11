@@ -7,8 +7,8 @@
 # https://seleniumhq.github.io/selenium/docs/api/py/api.html
 
 # ***************************************** #
-from scrapy.spiders import CrawlSpider, Rule
-from scrapy.linkextractors import LinkExtractor
+from scrapy.spiders import Spider
+from scrapy import Request
 
 from bundesrat.items import MeetingsItem
 
@@ -20,18 +20,10 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 # ***************************************** #
-class BundesratSpider(CrawlSpider):
+class BundesratSpider(Spider):
 
     name = "BundesratSpider"
     allowed_domains = ["bundesrat.de"]
-
-    rules = (
-        # Sites which should be saved
-        Rule(LinkExtractor(
-            restrict_xpaths=("//div[@class='pagination-index']/ul/li[class='next']/a",),
-            unique=True),
-            callback='parse_start_url',  # this function is defined below. It needs to be defined below.
-            follow=True),)
 
     # Define the years for which you want to have the data:
     # 2014 to 2016. (can be extended to greater time periods by
@@ -57,74 +49,82 @@ class BundesratSpider(CrawlSpider):
         print(response.url)
         time.sleep(2)
 
-        # # Start with just one website for developing the script:
-        # # driver.get("http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2015/beratungsvorgaenge-node.html") # for development
-        #
-        #
-        # tops = self.driver.find_elements_by_xpath("//li[contains(@class, 'top-item type-')]")
-        #
-        # # top = tops[2] # for development
-        # # top = driver.find_element_by_xpath("//li[contains(@id, 'top-644/15')]") # for development
-        # # top = driver.find_element_by_xpath("//li[contains(@id, 'top-643/15')]") # for development
-        # # top = driver.find_element_by_xpath("//li[contains(@id, 'top-640/15')]") # for development
-        #
-        #
-        # for top in tops:
-        #     item = MeetingsItem()
-        #     top_nr = (top.find_element_by_xpath(".//h2[@class='top-number']")).text
-        #     print(top_nr)
-        #     item['id'] = top_nr
-        #
-        #     details = top.find_element_by_xpath(".//div[@class='top-item-switcher']/a")
-        #
-        #     details.send_keys("\n")
-        #     #  this works for 644/15, 643/15, 640/15
-        #     # see http://stackoverflow.com/questions/8832858/using-python-bindings-selenium-webdriver-click-is-not-working-sometimes
-        #
-        #     time.sleep(2)  # I need to wait until the new content has appeared!!!
-        #
-        #
-        #     date = (top.find_elements_by_xpath(".//div[@class='zusatztitel']/following-sibling::p"))[0].text
-        #     item['date'] = date
-        #
-        #     year = date.split(".")[-1]
-        #     item['year'] = year
-        #
-        #
-        #     # If there are details on the committees involved, get those details:
-        #     try:
-        #         committees = (top.find_element_by_xpath(".//h3[contains(text(), 'Ausschusszuweisung')]/following-sibling::p")).text
-        #
-        #         item['committees'] = committees
-        #
-        #         fdf = committees.split(" - ")
-        #         fdf = str([i for i in fdf if "fdf" in i][0])
-        #         fdf = fdf.replace(" (fdf)", "")
-        #         item['fdf'] = fdf
-        #
-        #         com_list = committees.replace(" (fdf)", "").split(" - ")
-        #
-        #         # add a function for coding "(fdf)" ("federführend") later!!
-        #
-        #         com_list2 = ['AV', 'AIS', 'AA', 'EU', 'Fz', 'FJ', 'G', 'In',
-        #                       'K', 'R', 'Wo', 'U', 'Vk', 'V', 'Wi', 'other']
-        #
-        #         for com in com_list2:
-        #             print(com)
-        #             item[com] = (1 if com in com_list else 0)
-        #
-        #
-        #     except: # if no details on the "Ausschusszuweisung" given:
-        #         pass
-        #
-        #
-        #
-        #     print(item)
-        #     yield item
-        #
+        # Start with just one website for developing the script:
+        # driver.get("http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2015/beratungsvorgaenge-node.html") # for development
 
 
-        # Close the driver:
-        self.driver.close()
+        tops = self.driver.find_elements_by_xpath("//li[contains(@class, 'top-item type-')]")
+
+        # top = tops[2] # for development
+        # top = driver.find_element_by_xpath("//li[contains(@id, 'top-644/15')]") # for development
+        # top = driver.find_element_by_xpath("//li[contains(@id, 'top-643/15')]") # for development
+        # top = driver.find_element_by_xpath("//li[contains(@id, 'top-640/15')]") # for development
+
+        # ***************************************** #
+        for top in tops:
+            item = MeetingsItem()
+            top_nr = (top.find_element_by_xpath(".//h2[@class='top-number']")).text
+            print(top_nr)
+            item['id'] = top_nr
+
+            details = top.find_element_by_xpath(".//div[@class='top-item-switcher']/a")
+
+            details.send_keys("\n")
+            #  this works for 644/15, 643/15, 640/15
+            # see http://stackoverflow.com/questions/8832858/using-python-bindings-selenium-webdriver-click-is-not-working-sometimes
+
+            time.sleep(2)  # I need to wait until the new content has appeared!!!
 
 
+            date = (top.find_elements_by_xpath(".//div[@class='zusatztitel']/following-sibling::p"))[0].text
+            item['date'] = date
+
+            year = date.split(".")[-1]
+            item['year'] = year
+
+
+            # If there are details on the committees involved, get those details:
+            try:
+                committees = (top.find_element_by_xpath(".//h3[contains(text(), 'Ausschusszuweisung')]/following-sibling::p")).text
+
+                item['committees'] = committees
+
+                fdf = committees.split(" - ")
+                fdf = str([i for i in fdf if "fdf" in i][0])
+                fdf = fdf.replace(" (fdf)", "")
+                item['fdf'] = fdf
+
+                com_list = committees.replace(" (fdf)", "").split(" - ")
+
+                # add a function for coding "(fdf)" ("federführend") later!!
+
+                com_list2 = ['AV', 'AIS', 'AA', 'EU', 'Fz', 'FJ', 'G', 'In',
+                              'K', 'R', 'Wo', 'U', 'Vk', 'V', 'Wi', 'other']
+
+                for com in com_list2:
+                    print(com)
+                    item[com] = (1 if com in com_list else 0)
+
+
+            except: # if no details on the "Ausschusszuweisung" given:
+                pass
+
+            print(item)
+            yield item
+
+            # ***************************************** #
+        # Go to the next page and continue scraping:
+        try: # only if there are older pages to follow.
+            next_page = self.driver.find_element_by_xpath("//li[@class='next']/a").get_attribute("href")
+            time.sleep(4)
+            yield Request(next_page, callback=self.parse)
+
+        except:
+            print("Last page reached")
+            pass
+
+
+        # ***************************************** #
+        # Close the driver (only at the end of the process):
+        def __del__(self):
+            self.driver.close()
