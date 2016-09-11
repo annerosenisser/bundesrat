@@ -8,7 +8,26 @@
 import scrapy
 
 
-class BundesratItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class MeetingsItem(scrapy.Item):
+    id = scrapy.Field()
+    date = scrapy.Field()
+    year =  scrapy.Field()
+    committees = scrapy.Field()
+    AV = scrapy.Field()
+    AIS = scrapy.Field()
+    AA = scrapy.Field()
+    EU = scrapy.Field()
+    Fz = scrapy.Field()
+    FJ =  scrapy.Field()
+    G = scrapy.Field()
+    In = scrapy.Field()
+    K = scrapy.Field()
+    R = scrapy.Field()
+    Wo = scrapy.Field()
+    U = scrapy.Field()
+    Vk = scrapy.Field()
+    V = scrapy.Field()
+    Wi = scrapy.Field()
+    other = scrapy.Field()
+    fdf = scrapy.Field()
+
