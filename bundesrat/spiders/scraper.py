@@ -18,6 +18,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 import time
+from random import randint
 
 # ***************************************** #
 class BundesratSpider(Spider):
@@ -36,7 +37,8 @@ class BundesratSpider(Spider):
     start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/" + \
                   str(year) + "/beratungsvorgaenge-node.html" for year in years]
 
-    start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2015/beratungsvorgaenge-node.html"]
+    start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2016/beratungsvorgaenge-node.html"] # for development
+    # start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2014/beratungsvorgaenge-node.html?cms_gtp=5032236_list%253D19"]
 
 
 # ***************************************** #
@@ -47,7 +49,7 @@ class BundesratSpider(Spider):
         self.driver.get(response.url)
 
         print(response.url)
-        time.sleep(2)
+        time.sleep(randint(2,3))
 
         # Start with just one website for developing the script:
         # driver.get("http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2015/beratungsvorgaenge-node.html") # for development
@@ -64,7 +66,9 @@ class BundesratSpider(Spider):
         for top in tops:
             item = MeetingsItem()
             top_nr = (top.find_element_by_xpath(".//h2[@class='top-number']")).text
-            print(top_nr)
+            # print(top_nr)
+            
+
             item['id'] = top_nr
 
             details = top.find_element_by_xpath(".//div[@class='top-item-switcher']/a")
@@ -75,7 +79,6 @@ class BundesratSpider(Spider):
 
             time.sleep(2)  # I need to wait until the new content has appeared!!!
 
-
             date = (top.find_elements_by_xpath(".//div[@class='zusatztitel']/following-sibling::p"))[0].text
             item['date'] = date
 
@@ -84,6 +87,9 @@ class BundesratSpider(Spider):
 
 
             # If there are details on the committees involved, get those details:
+            com_list2 = ['AV', 'AIS', 'AA', 'EU', 'Fz', 'FJ', 'G', 'In',
+                         'K', 'R', 'Wo', 'U', 'Vk', 'V', 'Wi', 'other']
+
             try:
                 committees = (top.find_element_by_xpath(".//h3[contains(text(), 'Ausschusszuweisung')]/following-sibling::p")).text
 
@@ -96,23 +102,24 @@ class BundesratSpider(Spider):
 
                 com_list = committees.replace(" (fdf)", "").split(" - ")
 
-                # add a function for coding "(fdf)" ("federführend") later!!
-
-                com_list2 = ['AV', 'AIS', 'AA', 'EU', 'Fz', 'FJ', 'G', 'In',
-                              'K', 'R', 'Wo', 'U', 'Vk', 'V', 'Wi', 'other']
-
                 for com in com_list2:
                     print(com)
                     item[com] = (1 if com in com_list else 0)
 
 
             except: # if no details on the "Ausschusszuweisung" given:
+                # Define the items as None:
+                item['committees'] = None
+                item['fdf'] = None
+                for com in com_list2:
+                    print(com)
+                    item[com] = None
                 pass
 
             print(item)
             yield item
 
-            # ***************************************** #
+        # ***************************************** #
         # Go to the next page and continue scraping:
         try: # only if there are older pages to follow.
             next_page = self.driver.find_element_by_xpath("//li[@class='next']/a").get_attribute("href")
