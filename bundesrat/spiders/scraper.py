@@ -37,8 +37,8 @@ class BundesratSpider(Spider):
     start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/" + \
                   str(year) + "/beratungsvorgaenge-node.html" for year in years]
 
-    start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2016/beratungsvorgaenge-node.html"] # for development
-    # start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2014/beratungsvorgaenge-node.html?cms_gtp=5032236_list%253D19"]
+    # start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2013/beratungsvorgaenge-node.html"] # for development
+    # start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2014/beratungsvorgaenge-node.html?cms_gtp=5032236_list%253D9"]
 
 
 # ***************************************** #
@@ -67,9 +67,10 @@ class BundesratSpider(Spider):
             item = MeetingsItem()
             top_nr = (top.find_element_by_xpath(".//h2[@class='top-number']")).text
             # print(top_nr)
-            
-
             item['id'] = top_nr
+
+            title = (top.find_element_by_xpath(".//h2/a")).text
+            item['title'] = title
 
             details = top.find_element_by_xpath(".//div[@class='top-item-switcher']/a")
 
@@ -120,7 +121,7 @@ class BundesratSpider(Spider):
             yield item
 
         # ***************************************** #
-        # Go to the next page and continue scraping:
+        # # Go to the next page and continue scraping:
         try: # only if there are older pages to follow.
             next_page = self.driver.find_element_by_xpath("//li[@class='next']/a").get_attribute("href")
             time.sleep(4)
@@ -132,6 +133,8 @@ class BundesratSpider(Spider):
 
 
         # ***************************************** #
-        # Close the driver (only at the end of the process):
-        def __del__(self):
-            self.driver.close()
+    # Close the driver (only at the end of the process):
+    def __del__(self):
+        # self.driver.close() # sometimes better not to close, as I then can see
+        # on which page the scraper stopped. This is helpful for potential debugging.
+        pass

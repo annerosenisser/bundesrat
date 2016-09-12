@@ -30,4 +30,5 @@ class MeetingsItem(scrapy.Item):
     Wi = scrapy.Field()
     other = scrapy.Field()
     fdf = scrapy.Field()
+    title = scrapy.Field()
 

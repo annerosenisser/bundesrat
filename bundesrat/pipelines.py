@@ -6,7 +6,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import csv
-
+import codecs
 
 class BundesratPipeline(object):
     def __init__(self):
@@ -15,16 +15,16 @@ class BundesratPipeline(object):
 
     def openTxT(self):
         try: # if file already exists:
-            with open('/Users/Annerose/Documents/15-16/Code/bundesrat-beratungsvorgaenge/data/bundesrat.csv', 'r') as f:
+            with codecs.open('/Users/Annerose/Documents/15-16/Code/bundesrat-beratungsvorgaenge/data/bundesrat.csv', 'r', encoding='utf-8') as f:
                 w= csv.reader(f, delimiter=',')
                 self.ids = [x[0] for x in w][1:] # getting id-column (without accessing column name, i.e.
                 # the very first row. )
 
 
         except: # if file does not yet exist:
-            with open('/Users/Annerose/Documents/15-16/Code/bundesrat-beratungsvorgaenge/data/bundesrat.csv', 'w+') as f:
+            with codecs.open('/Users/Annerose/Documents/15-16/Code/bundesrat-beratungsvorgaenge/data/bundesrat.csv', 'w+', encoding='utf-8') as f:
                 w = csv.writer(f, delimiter=',')
-                cols = ['id', 'date', 'year', 'committees', 'AV',
+                cols = ['id', 'title', 'date', 'year', 'committees', 'AV',
                                    'AIS', 'AA', 'EU', 'Fz', 'FJ', 'G', 'In', 'K', 'R', 'Wo', 'U',
                                    'Vk', 'V', 'Wi', 'other', 'fdf']
                 cols = sorted(cols) # sort the column names alphabetically as this is
@@ -43,6 +43,6 @@ class BundesratPipeline(object):
         return item
 
     def toTxt(self, item):
-        with open('/Users/Annerose/Documents/15-16/Code/bundesrat-beratungsvorgaenge/data/bundesrat.csv', 'a+') as f:
+        with codecs.open('/Users/Annerose/Documents/15-16/Code/bundesrat-beratungsvorgaenge/data/bundesrat.csv', 'a+', encoding='utf-8') as f:
             w = csv.writer(f, delimiter=',')
             w.writerow([value for (key, value) in sorted(item.items())]) # items need to be sorted correctly!
