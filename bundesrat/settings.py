@@ -45,3 +45,8 @@ DOWNLOAD_DELAY = 3
 ITEM_PIPELINES = {
    'bundesrat.pipelines.BundesratPipeline': 300,
 }
+
+# **************************************************** #
+# Adjust the log level that is shown in the terminal when running the spider.
+LOG_LEVEL = 'INFO'
+# LOG_LEVEL = 'DEBUG'
