@@ -18,7 +18,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 import time
-from random import randint
+from random import randint, uniform
 
 # ***************************************** #
 class BundesratSpider(Spider):
@@ -37,8 +37,8 @@ class BundesratSpider(Spider):
     start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/" + \
                   str(year) + "/beratungsvorgaenge-node.html" for year in years]
 
-    # start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2013/beratungsvorgaenge-node.html"] # for development
-    # start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2014/beratungsvorgaenge-node.html?cms_gtp=5032236_list%253D9"]
+    start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2007/beratungsvorgaenge-node.html"] # for development
+    # start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2008/beratungsvorgaenge-node.html?cms_gtp=5032160_list%253D16"]
 
 
 # ***************************************** #
@@ -49,7 +49,7 @@ class BundesratSpider(Spider):
         self.driver.get(response.url)
 
         print(response.url)
-        time.sleep(randint(2,3))
+        time.sleep(uniform(2,3))
 
         # Start with just one website for developing the script:
         # driver.get("http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2015/beratungsvorgaenge-node.html") # for development
@@ -60,7 +60,7 @@ class BundesratSpider(Spider):
         # top = tops[2] # for development
         # top = driver.find_element_by_xpath("//li[contains(@id, 'top-644/15')]") # for development
         # top = driver.find_element_by_xpath("//li[contains(@id, 'top-643/15')]") # for development
-        # top = driver.find_element_by_xpath("//li[contains(@id, 'top-640/15')]") # for development
+        # top = driver.find_element_by_xpath("//li[contains(@id, 'top-529/08')]") # for development
 
         # ***************************************** #
         for top in tops:
@@ -78,7 +78,8 @@ class BundesratSpider(Spider):
             #  this works for 644/15, 643/15, 640/15
             # see http://stackoverflow.com/questions/8832858/using-python-bindings-selenium-webdriver-click-is-not-working-sometimes
 
-            time.sleep(2)  # I need to wait until the new content has appeared!!!
+            time.sleep(uniform(3,4))  # I need to wait until the new content has appeared!!! Better wait longer, gives less errors,
+            # makes script more stable.
 
             date = (top.find_elements_by_xpath(".//div[@class='zusatztitel']/following-sibling::p"))[0].text
             item['date'] = date
