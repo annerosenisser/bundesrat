@@ -38,7 +38,7 @@ class BundesratSpider(Spider):
                   str(year) + "/beratungsvorgaenge-node.html" for year in years]
 
     start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2007/beratungsvorgaenge-node.html"] # for development
-    # start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2008/beratungsvorgaenge-node.html?cms_gtp=5032160_list%253D16"]
+    start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2007/beratungsvorgaenge-node.html?cms_gtp=5032152_list%253D24"]
 
 
 # ***************************************** #
@@ -78,15 +78,24 @@ class BundesratSpider(Spider):
             #  this works for 644/15, 643/15, 640/15
             # see http://stackoverflow.com/questions/8832858/using-python-bindings-selenium-webdriver-click-is-not-working-sometimes
 
-            time.sleep(uniform(3,4))  # I need to wait until the new content has appeared!!! Better wait longer, gives less errors,
+            time.sleep(uniform(2,3))  # I need to wait until the new content has appeared!!! Better wait longer, gives less errors,
             # makes script more stable.
 
-            date = (top.find_elements_by_xpath(".//div[@class='zusatztitel']/following-sibling::p"))[0].text
-            item['date'] = date
+            mustend = time.time() + 20 # give loop maximum of 20 seconds.
+            date = None
+            # http://stackoverflow.com/questions/4606919/in-python-try-until-no-error
+            while date is None and time.time() < mustend: # necessary condition to break the while loop
+                try:
+                    date = (top.find_elements_by_xpath(".//div[@class='zusatztitel']/following-sibling::p"))[0].text
+                    item['date'] = date
+
+                except:
+                    time.sleep(uniform(3, 4))
+                    print("Slept as pop-up was not shown yet.")
+
 
             year = date.split(".")[-1]
             item['year'] = year
-
 
             # If there are details on the committees involved, get those details:
             com_list2 = ['AV', 'AIS', 'AA', 'EU', 'Fz', 'FJ', 'G', 'In',
@@ -105,7 +114,7 @@ class BundesratSpider(Spider):
                 com_list = committees.replace(" (fdf)", "").split(" - ")
 
                 for com in com_list2:
-                    print(com)
+                    # print(com)
                     item[com] = (1 if com in com_list else 0)
 
 
@@ -114,7 +123,7 @@ class BundesratSpider(Spider):
                 item['committees'] = None
                 item['fdf'] = None
                 for com in com_list2:
-                    print(com)
+                    # print(com)
                     item[com] = None
                 pass
 
