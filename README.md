@@ -2,7 +2,7 @@
 
 This is a Python-based webscraper for collecting data on all public sessions of the German Bundesrat (Federal Council). 
 
-It scrapes [this website](http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2016/beratungsvorgaenge-node.html) containing session information on public sessions of the German Bundesrat in 2016 (as well as the ones for [2015](http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2015/beratungsvorgaenge-node.html) and [2014](http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2014/beratungsvorgaenge-node.html)).
+It scrapes [this website](http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2016/beratungsvorgaenge-node.html) containing session information on public sessions of the German Bundesrat in 2016 (as well as the ones for [2015](http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2015/beratungsvorgaenge-node.html) and [2014](http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2014/beratungsvorgaenge-node.html)). I subsequently decided to collect all data for the time period 2002-2016.
 
 More specifically, it collects information on the unique identifier of the session ("Beratungsvorgang") and on the committee(s) involved in the decision-making. 
 
