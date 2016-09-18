@@ -20,6 +20,8 @@ from selenium.webdriver.common.keys import Keys
 import time
 from random import randint, uniform
 
+import re # for string matching
+
 # ***************************************** #
 class BundesratSpider(Spider):
 
@@ -37,8 +39,8 @@ class BundesratSpider(Spider):
     start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/" + \
                   str(year) + "/beratungsvorgaenge-node.html" for year in years]
 
-    start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2007/beratungsvorgaenge-node.html"] # for development
-    start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2007/beratungsvorgaenge-node.html?cms_gtp=5032152_list%253D24"]
+    start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2014/beratungsvorgaenge-node.html"] # for development
+    # start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2007/beratungsvorgaenge-node.html?cms_gtp=5032152_list%253D24"]
 
 
 # ***************************************** #
@@ -81,7 +83,7 @@ class BundesratSpider(Spider):
             time.sleep(uniform(2,3))  # I need to wait until the new content has appeared!!! Better wait longer, gives less errors,
             # makes script more stable.
 
-            mustend = time.time() + 20 # give loop maximum of 20 seconds.
+            mustend = time.time() + 30 # give loop maximum of 20 seconds.
             date = None
             # http://stackoverflow.com/questions/4606919/in-python-try-until-no-error
             while date is None and time.time() < mustend: # necessary condition to break the while loop
@@ -98,7 +100,7 @@ class BundesratSpider(Spider):
             item['year'] = year
 
             # If there are details on the committees involved, get those details:
-            com_list2 = ['AV', 'AIS', 'AA', 'EU', 'Fz', 'FJ', 'G', 'In',
+            com_list2 = ['AV', 'EU', 'Fz', 'FJ', 'G', 'In',
                          'K', 'R', 'Wo', 'U', 'Vk', 'V', 'Wi', 'other']
 
             try:
@@ -113,10 +115,14 @@ class BundesratSpider(Spider):
 
                 com_list = committees.replace(" (fdf)", "").split(" - ")
 
-                for com in com_list2:
+                for com in com_list2[2:]:
                     # print(com)
                     item[com] = (1 if com in com_list else 0)
 
+                item["AA"] =  (1 if len([c for c in ["AA", "A"] if c in com_list]) >0 else 0 )# there a two alternative
+                # abbreviations for the "AA" committee on the website: "AA" and "A"
+                item["AIS"] = (1 if len([c for c in ["AIS", "AS"] if c in com_list]) >0 else 0 ) # there a two alternative
+                # abbreviations for the "AIS" committee on the website: "AIS" and "AS"
 
             except: # if no details on the "Ausschusszuweisung" given:
                 # Define the items as None:
@@ -125,6 +131,8 @@ class BundesratSpider(Spider):
                 for com in com_list2:
                     # print(com)
                     item[com] = None
+                item["AA"] = None
+                item["AIS"] = None
                 pass
 
             print(item)
