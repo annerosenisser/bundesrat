@@ -15,14 +15,14 @@ class BundesratPipeline(object):
 
     def openTxT(self):
         try: # if file already exists:
-            with codecs.open('/Users/Annerose/Documents/15-16/Code/bundesrat-beratungsvorgaenge/data/bundesrat.csv', 'r', encoding='utf-8') as f:
+            with codecs.open('/Users/Annerose/Documents/15-16/Code/bundesrat/data/bundesrat.csv', 'r', encoding='utf-8') as f:
                 w= csv.reader(f, delimiter=',')
                 self.ids = [x[0] for x in w][1:] # getting id-column (without accessing column name, i.e.
                 # the very first row. )
 
 
         except: # if file does not yet exist:
-            with codecs.open('/Users/Annerose/Documents/15-16/Code/bundesrat-beratungsvorgaenge/data/bundesrat.csv', 'w+', encoding='utf-8') as f:
+            with codecs.open('/Users/Annerose/Documents/15-16/Code/bundesrat/data/bundesrat.csv', 'w+', encoding='utf-8') as f:
                 w = csv.writer(f, delimiter=',')
                 cols = ['id', 'title', 'date', 'year', 'committees', 'AV',
                                    'AIS', 'AA', 'EU', 'Fz', 'FJ', 'G', 'In', 'K', 'R', 'Wo', 'U',
@@ -43,6 +43,6 @@ class BundesratPipeline(object):
         return item
 
     def toTxt(self, item):
-        with codecs.open('/Users/Annerose/Documents/15-16/Code/bundesrat-beratungsvorgaenge/data/bundesrat.csv', 'a+', encoding='utf-8') as f:
+        with codecs.open('/Users/Annerose/Documents/15-16/Code/bundesrat/data/bundesrat.csv', 'a+', encoding='utf-8') as f:
             w = csv.writer(f, delimiter=',')
             w.writerow([value for (key, value) in sorted(item.items())]) # items need to be sorted correctly!
