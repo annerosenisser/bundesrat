@@ -1,4 +1,4 @@
-# bundesrat-beratungsvorgaenge
+# bundesrat
 
 This is a Python-based webscraper for collecting data on all public sessions of the German Bundesrat (Federal Council). 
 
