@@ -1,8 +1,12 @@
 ---
 title: "Cooperation among Committees in the German Bundesrat"
-output: html_document
+output: md_document
 author: Annerose Nisser, September 2016
+root: "../"
 ---
+<!-- see 
+http://stackoverflow.com/questions/31914161/how-to-convert-rmd-into-md-in-r-studio
+for how to render .Rmd to .md (to push to github). -->
 
 This file analyses the data collected on sessions of the German Bundesrat (Federal Council). I use data that I collected with a Python-based webscraper (combining [Selenium](http://selenium-python.readthedocs.io) and [scrapy](https://scrapy.org)).  You find my code [here](https://github.com/annerosenisser/bundesrat/tree/master/bundesrat).
 
@@ -18,10 +22,10 @@ I'm reading in the data that I collected with the scraper:
 
 
 ```{r}
-# getwd()
-yourpath <- "/Users/Annerose/Documents/15-16/Code/bundesrat"
-setwd(yourpath)
-bundesrat <- read.csv("data/bundesrat_2014-16.csv")
+getwd()
+# yourpath <- "/Users/Annerose/Documents/15-16/Code/bundesrat"
+# setwd(yourpath)
+bundesrat <- read.csv("bundesrat_2014-16.csv")
 ```
 
 I then make sure that the data is read in correctly: 
@@ -36,6 +40,7 @@ head(bundesrat)
 In the dataset, each decision of the German Bundesrat is saved in one row. The committees involved in a given decision are coded as dummy variables. This signifies that I can easily table in how many decisions each committee was involved during the time period of observation (2014-2016):
 
 ```{r, fig.height=4.5, fig.width = 8}
+for (i in names(bundesrat)[1:15]) {bundesrat[, i] <- as.integer(bundesrat[, i])}
 t <- apply(bundesrat[, c(1:15)], 2, sum, na.rm = T)
 t <- sort(t, decreasing = T)
 barplot(t, xlab = "Committees", ylab = "# Decisions involved", 
