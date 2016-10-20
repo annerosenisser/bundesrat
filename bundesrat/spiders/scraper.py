@@ -39,7 +39,7 @@ class BundesratSpider(Spider):
     start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/" + \
                   str(year) + "/beratungsvorgaenge-node.html" for year in years]
 
-    start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2014/beratungsvorgaenge-node.html"] # for development
+    start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2012/beratungsvorgaenge-node.html"] # for development
     # start_urls = ["http://www.bundesrat.de/DE/dokumente/beratungsvorgaenge/2007/beratungsvorgaenge-node.html?cms_gtp=5032152_list%253D24"]
 
 
