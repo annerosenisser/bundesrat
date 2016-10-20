@@ -125,7 +125,7 @@ on the package, see
 
     corrplot(m, method = "color")
 
-![](cooperation_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+![](fig-unnamed-chunk-7-1.png)
 
 It's still pretty hard to see any pattern in this plot. I see two issues
 with this plot:

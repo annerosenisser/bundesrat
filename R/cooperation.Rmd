@@ -96,7 +96,7 @@ head(m, 5)
 
 It's difficult to see any pattern from this large table (of which only parts are displayed above). Therefore, I opt instead for a correlation plot. You need to have `corrplot` installed to run this. If not, run `install.packages("corrplot")` to get the package. For more information on the package, see [here](http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram).
 
-```{r, fig.height = 3.5, fig.width = 8}
+```{r, fig.height = 3.5, fig.width = 8, fig.path='fig-'}
 require(corrplot)
 corrplot(m, method = "color")
 ```
