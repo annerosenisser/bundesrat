@@ -18,6 +18,6 @@ scrapy runspider scraper.py
 inside the directory where this project is stored. 
     
 ***
-I've done this project as a favor for a colleague and an opportunity to practice my webscraping skills (and unexpectedly, it allowed me to learn Selenium!). 
+I've done this project as a favor to a colleague and an opportunity to practice my webscraping skills (and unexpectedly, it allowed me to learn Selenium!). 
 
 The data should be of interest to scholars of political science and public administration.
